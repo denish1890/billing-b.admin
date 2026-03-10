@@ -5,4 +5,4 @@ fpdf
 qrcode
 pyrebase4
 firebase_admin
-matplotlib.pyplot
+
