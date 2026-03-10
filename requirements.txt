@@ -4,3 +4,4 @@ Pillow
 fpdf
 qrcode
 pyrebase4
+firebase_admin
