@@ -956,7 +956,7 @@ if st.session_state["page"] == "Admin":
             """, unsafe_allow_html=True)
             
             with col3:
-            st.markdown(f"""
+               st.markdown(f"""
             <div class="css-card" style="text-align: center; border-bottom: 4px solid #f44336;">
                 <h3 style="margin:0; color:#f44336; font-size: 32px;">{counts['cancelled_count'] or 0}</h3>
                 <p style="color:#666; font-weight: 600;">❌ Cancelled Orders</p>
@@ -2133,6 +2133,7 @@ if st.session_state["page"] == "downloadbill":
 
 
     
+
 
 
 
