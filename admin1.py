@@ -1004,29 +1004,24 @@ if st.session_state["page"] == "Admin":
                 else:
                     # Proceed with saving if validation passes
                     image_path = None
-                    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-                  if image:
-                      image_folder = os.path.join(BASE_DIR, "menu_images")
-                      os.makedirs(image_folder, exist_ok=True)
-
-                      image_path = os.path.join("menu_images", image.name)
-                      full_path = os.path.join(BASE_DIR, image_path)
-
-                      with open(full_path, "wb") as f:
-                          f.write(image.getbuffer())
-
-variants_json = json.dumps(variant_data) if variant_data else None
-base_price = min([v["price"] for v in variant_data]) if variant_data else 0
-
-cursor.execute("""
-    INSERT INTO menu_items 
-    (name, price, image, available, is_active, email, variants) 
-    VALUES (%s, %s, %s, %s, %s, %s, %s)
-""", (
-    name, base_price, image_path, available, 1,
-    st.session_state["email"], variants_json
-))
-db.commit()
+                    if image:
+                        os.makedirs("menu_images", exist_ok=True)
+                        image_path = os.path.join("menu_images", image.name)
+                        with open(image_path, "wb") as f:
+                            f.write(image.getbuffer())
+            
+                    variants_json = json.dumps(variant_data) if variant_data else None
+                    base_price = min([v["price"] for v in variant_data]) if variant_data else 0
+            
+                    cursor.execute("""
+                        INSERT INTO menu_items 
+                        (name, price, image, available, is_active, email, variants) 
+                        VALUES (%s, %s, %s, %s, %s, %s, %s)
+                    """, (
+                        name, base_price, image_path, available, 1, 
+                        st.session_state["email"], variants_json
+                    ))
+                    db.commit()
                     st.success("✅ Item added successfully!")
                     st.rerun()
     
@@ -2118,8 +2113,6 @@ if st.session_state["page"] == "downloadbill":
 
 
     
-
-
 
 
 
