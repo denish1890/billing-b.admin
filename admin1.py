@@ -967,77 +967,87 @@ if st.session_state["page"] == "Admin":
         st.info("👈 Select an option from the sidebar to manage your cafe.")
 
     elif selected == "Add Items":
-        st.title("🍔 Add Items")
-        with st.container(border=True):
-            st.markdown('<div class="css-card">', unsafe_allow_html=True)
-            st.subheader("➕ Add New Menu Item")
-            
-            col1, col2 = st.columns(2)
-            
-            with col1:
-                name = st.text_input("Item Name", key="add_item_name")
-                type_count = st.number_input("How many variants?", min_value=0, max_value=10, step=1, key="add_variant_count")
-                variant_data = []
-        
-                if type_count > 0:
-                    st.markdown("### 🔹 Enter Variant Names & Prices")
-                    for i in range(int(type_count)):
-                        v_col1, v_col2 = st.columns(2)
-                        with v_col1:
-                            v_name = st.text_input(f"Variant {i+1} Name", key=f"vname_{i}")
-                        with v_col2:
-                            v_price = st.number_input(f"Price for {i+1}", min_value=0, key=f"vprice_{i}")
-                        variant_data.append({"name": v_name, "price": v_price})
-    
-            with col2:
-                image = st.file_uploader("Upload Image", type=["png", "jpg", "jpeg"], key="add_item_image")
-                available = st.checkbox("Available", value=True, key="add_item_available")
-    
-            if st.button("Add Item", key="add_item_btn"):
-                # --- VALIDATION LOGIC START ---
-                if not name.strip():
-                    st.error("Please fill the data: **Item Name** is required.")
-                elif type_count > 0 and any(not v["name"].strip() for v in variant_data):
-                    st.error("Please fill the data: One or more **Variant Names** are empty.")
-                elif type_count > 0 and any(v["price"] <= 0 for v in variant_data):
-                    st.error("Please fill the data: All **Variant Prices** must be greater than 0.")
-                elif type_count == 0:
-                     st.error("Please fill the data: You must have at least **1 variant** (or a base price).")
-                # --- VALIDATION LOGIC END ---
-                
+    st.title("🍔 Add Items")
+
+    with st.container(border=True):
+        st.markdown('<div class="css-card">', unsafe_allow_html=True)
+        st.subheader("➕ Add New Menu Item")
+
+        col1, col2 = st.columns(2)
+
+        with col1:
+            name = st.text_input("Item Name", key="add_item_name")
+            type_count = st.number_input(
+                "How many variants?", min_value=0, max_value=10, step=1, key="add_variant_count"
+            )
+
+            variant_data = []
+
+            if type_count > 0:
+                st.markdown("### 🔹 Enter Variant Names & Prices")
+
+                for i in range(int(type_count)):
+                    v_col1, v_col2 = st.columns(2)
+
+                    with v_col1:
+                        v_name = st.text_input(f"Variant {i+1} Name", key=f"vname_{i}")
+
+                    with v_col2:
+                        v_price = st.number_input(f"Price for {i+1}", min_value=0, key=f"vprice_{i}")
+
+                    variant_data.append({"name": v_name, "price": v_price})
+
+        with col2:
+            image = st.file_uploader("Upload Image", type=["png", "jpg", "jpeg"], key="add_item_image")
+            available = st.checkbox("Available", value=True, key="add_item_available")
+
+        # ✅ BUTTON MUST BE HERE
+        if st.button("Add Item", key="add_item_btn"):
+
+            if not name.strip():
+                st.error("Please fill the data: Item Name is required.")
+
+            elif type_count > 0 and any(not v["name"].strip() for v in variant_data):
+                st.error("Variant name missing")
+
+            elif type_count > 0 and any(v["price"] <= 0 for v in variant_data):
+                st.error("Variant price must be greater than 0")
+
             else:
-                    # Proceed with saving if validation passes
                 image_path = None
 
-                if image:
+                if image is not None:
                     filename = f"{uuid.uuid4()}_{image.name}"
-
-    # Save file to server folder
                     full_path = os.path.join(IMAGE_DIR, filename)
 
                     with open(full_path, "wb") as f:
-                         f.write(image.getbuffer())
- 
-    # Save path to database
-                    image_path = f"menu_images/{filename}"
-                    variants_json = json.dumps(variant_data) if variant_data else None
-                    base_price = min([v["price"] for v in variant_data]) if variant_data else 0
-            
-                    cursor.execute("""
-                        INSERT INTO menu_items 
-                        (name, price, image, available, is_active, email, variants) 
-                        VALUES (%s, %s, %s, %s, %s, %s, %s)
-                    """, (
-                        name, base_price, image_path, available, 1, 
-                        st.session_state["email"], variants_json
-                    ))
-                    db.commit()
-                    st.success("✅ Item added successfully!")
-                    st.rerun()
-    
-            st.markdown('</div>', unsafe_allow_html=True)
+                        f.write(image.getbuffer())
 
- 
+                    image_path = f"menu_images/{filename}"
+
+                variants_json = json.dumps(variant_data) if variant_data else None
+                base_price = min([v["price"] for v in variant_data]) if variant_data else 0
+
+                cursor.execute("""
+                    INSERT INTO menu_items
+                    (name, price, image, available, is_active, email, variants)
+                    VALUES (%s, %s, %s, %s, %s, %s, %s)
+                """, (
+                    name,
+                    base_price,
+                    image_path,
+                    available,
+                    1,
+                    st.session_state["email"],
+                    variants_json
+                ))
+
+                db.commit()
+
+                st.success("✅ Item added successfully!")
+                st.rerun()
+
+        st.markdown('</div>', unsafe_allow_html=True)
     elif selected == "Manage Menu":
             
             st.title("✏️ Manage Menu")
@@ -2123,6 +2133,7 @@ if st.session_state["page"] == "downloadbill":
 
 
     
+
 
 
 
