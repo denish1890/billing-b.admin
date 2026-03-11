@@ -1016,7 +1016,7 @@ if st.session_state["page"] == "Admin":
                     full_path = os.path.join(IMAGE_DIR, filename)
 
                     with open(full_path, "wb") as f:
-                    f.write(image.getbuffer())
+                         f.write(image.getbuffer())
  
     # Save path to database
                     image_path = f"menu_images/{filename}"
@@ -2123,6 +2123,7 @@ if st.session_state["page"] == "downloadbill":
 
 
     
+
 
 
 
