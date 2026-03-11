@@ -1004,11 +1004,16 @@ if st.session_state["page"] == "Admin":
                 else:
                     # Proceed with saving if validation passes
                     image_path = None
-                    if image:
-                        os.makedirs("menu_images", exist_ok=True)
-                        image_path = os.path.join("menu_images", image.name)
-                        with open(image_path, "wb") as f:
-                            f.write(image.getbuffer())
+                    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+                  if image:
+                      image_folder = os.path.join(BASE_DIR, "menu_images")
+                      os.makedirs(image_folder, exist_ok=True)
+
+                      image_path = os.path.join("menu_images", image.name)
+                      full_path = os.path.join(BASE_DIR, image_path)
+
+                      with open(full_path, "wb") as f:
+                      f.write(image.getbuffer())
             
                     variants_json = json.dumps(variant_data) if variant_data else None
                     base_price = min([v["price"] for v in variant_data]) if variant_data else 0
@@ -2113,6 +2118,7 @@ if st.session_state["page"] == "downloadbill":
 
 
     
+
 
 
 
