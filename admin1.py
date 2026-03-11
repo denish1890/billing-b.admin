@@ -923,8 +923,8 @@ if st.session_state["page"] == "Admin":
     # 🏠 DASHBOARD (New Home)
     # ==========================
    if selected == "Dashboard":
-     st.title("📊 Dashboard")
-     st.markdown("Overview of your cafe performance today.")
+       st.title("📊 Dashboard")
+       st.markdown("Overview of your cafe performance today.")
     
     # Fetch Data
     cursor.execute("""
@@ -2133,6 +2133,7 @@ if st.session_state["page"] == "downloadbill":
 
 
     
+
 
 
 
