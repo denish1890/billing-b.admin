@@ -1005,7 +1005,7 @@ if st.session_state["page"] == "Admin":
                      st.error("Please fill the data: You must have at least **1 variant** (or a base price).")
                 # --- VALIDATION LOGIC END ---
                 
-                else:
+            else:
                     # Proceed with saving if validation passes
                 image_path = None
 
@@ -2123,6 +2123,7 @@ if st.session_state["page"] == "downloadbill":
 
 
     
+
 
 
 
