@@ -922,53 +922,53 @@ if st.session_state["page"] == "Admin":
     # ==========================
     # 🏠 DASHBOARD (New Home)
     # ==========================
-    if selected == "Dashboard":
-        st.title("📊 Dashboard")
-        st.markdown("Overview of your cafe performance today.")
-        
-        # Fetch Data
-        cursor.execute("""
-            SELECT 
-                SUM(CASE WHEN status='COMPLETED' THEN 1 ELSE 0 END) AS completed_count,
-                SUM(CASE WHEN status='PENDING' THEN 1 ELSE 0 END) AS pending_count,
-                SUM(CASE WHEN status='CANCELLED' THEN 1 ELSE 0 END) AS cancelled_count
-            FROM orders WHERE email = %s
-        """, (st.session_state["email"],))
-        counts = cursor.fetchone()
+   if selected == "Dashboard":
+     st.title("📊 Dashboard")
+     st.markdown("Overview of your cafe performance today.")
+    
+    # Fetch Data
+    cursor.execute("""
+        SELECT 
+            SUM(CASE WHEN status='COMPLETED' THEN 1 ELSE 0 END) AS completed_count,
+            SUM(CASE WHEN status='PENDING' THEN 1 ELSE 0 END) AS pending_count,
+            SUM(CASE WHEN status='CANCELLED' THEN 1 ELSE 0 END) AS cancelled_count
+        FROM orders WHERE email = %s
+    """, (st.session_state["email"],))
+    
+    counts = cursor.fetchone()
 
-        # --- CUSTOM COLORFUL METRIC CARDS ---
-        col1, col2, col3 = st.columns(3)
-        
-        with col1:
-            st.markdown(f"""
-            <div class="css-card" style="text-align: center; border-bottom: 4px solid #4CAF50;">
-                <h3 style="margin:0; color:#4CAF50; font-size: 32px;">{counts['completed_count'] or 0}</h3>
-                <p style="color:#666; font-weight: 600;">✅ Completed Orders</p>
-            </div>
-            """, unsafe_allow_html=True)
-            
-        with col2:
-            st.markdown(f"""
-            <div class="css-card" style="text-align: center; border-bottom: 4px solid #ff9800;">
-                <h3 style="margin:0; color:#ff9800; font-size: 32px;">{counts['pending_count'] or 0}</h3>
-                <p style="color:#666; font-weight: 600;">⏳ Pending Orders</p>
-            </div>
-            """, unsafe_allow_html=True)
-            
-            with col3:
-               st.markdown(f"""
-            <div class="css-card" style="text-align: center; border-bottom: 4px solid #f44336;">
-                <h3 style="margin:0; color:#f44336; font-size: 32px;">{counts['cancelled_count'] or 0}</h3>
-                <p style="color:#666; font-weight: 600;">❌ Cancelled Orders</p>
-            </div>
-            """, unsafe_allow_html=True)
-            
-        st.divider()
-        st.info("👈 Select an option from the sidebar to manage your cafe.")
+    # --- METRIC CARDS ---
+    col1, col2, col3 = st.columns(3)
 
-    elif selected == "Add Items":
-        st.title("🍔 Add Items")
+    with col1:
+        st.markdown(f"""
+        <div class="css-card" style="text-align: center; border-bottom: 4px solid #4CAF50;">
+            <h3 style="margin:0; color:#4CAF50; font-size: 32px;">{counts['completed_count'] or 0}</h3>
+            <p style="color:#666; font-weight: 600;">✅ Completed Orders</p>
+        </div>
+        """, unsafe_allow_html=True)
 
+    with col2:
+        st.markdown(f"""
+        <div class="css-card" style="text-align: center; border-bottom: 4px solid #ff9800;">
+            <h3 style="margin:0; color:#ff9800; font-size: 32px;">{counts['pending_count'] or 0}</h3>
+            <p style="color:#666; font-weight: 600;">⏳ Pending Orders</p>
+        </div>
+        """, unsafe_allow_html=True)
+
+    with col3:
+        st.markdown(f"""
+        <div class="css-card" style="text-align: center; border-bottom: 4px solid #f44336;">
+            <h3 style="margin:0; color:#f44336; font-size: 32px;">{counts['cancelled_count'] or 0}</h3>
+            <p style="color:#666; font-weight: 600;">❌ Cancelled Orders</p>
+        </div>
+        """, unsafe_allow_html=True)
+
+    st.divider()
+    st.info("👈 Select an option from the sidebar to manage your cafe.")
+
+   elif selected == "Add Items":
+    st.title("🍔 Add Items")
     with st.container(border=True):
 
         st.markdown('<div class="css-card">', unsafe_allow_html=True)
@@ -1048,7 +1048,7 @@ if st.session_state["page"] == "Admin":
                 st.rerun()
 
                 st.markdown('</div>', unsafe_allow_html=True)
-        elif selected == "Manage Menu":
+    elif selected == "Manage Menu":
             
             st.title("✏️ Manage Menu")
             # ----------------------
