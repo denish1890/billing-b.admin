@@ -1013,20 +1013,20 @@ if st.session_state["page"] == "Admin":
                       full_path = os.path.join(BASE_DIR, image_path)
 
                       with open(full_path, "wb") as f:
-                      f.write(image.getbuffer())
-            
-                    variants_json = json.dumps(variant_data) if variant_data else None
-                    base_price = min([v["price"] for v in variant_data]) if variant_data else 0
-            
-                    cursor.execute("""
-                        INSERT INTO menu_items 
-                        (name, price, image, available, is_active, email, variants) 
-                        VALUES (%s, %s, %s, %s, %s, %s, %s)
-                    """, (
-                        name, base_price, image_path, available, 1, 
-                        st.session_state["email"], variants_json
-                    ))
-                    db.commit()
+                          f.write(image.getbuffer())
+
+variants_json = json.dumps(variant_data) if variant_data else None
+base_price = min([v["price"] for v in variant_data]) if variant_data else 0
+
+cursor.execute("""
+    INSERT INTO menu_items 
+    (name, price, image, available, is_active, email, variants) 
+    VALUES (%s, %s, %s, %s, %s, %s, %s)
+""", (
+    name, base_price, image_path, available, 1,
+    st.session_state["email"], variants_json
+))
+db.commit()
                     st.success("✅ Item added successfully!")
                     st.rerun()
     
@@ -2118,6 +2118,7 @@ if st.session_state["page"] == "downloadbill":
 
 
     
+
 
 
 
