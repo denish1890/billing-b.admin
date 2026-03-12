@@ -1,5 +1,4 @@
 import streamlit as st
-import os
 from fpdf import FPDF
 import pyrebase
 import json
@@ -21,6 +20,10 @@ from streamlit_option_menu import option_menu
 import base64
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 IMAGE_DIR = os.path.join(BASE_DIR, "menu_images")
+os.makedirs(IMAGE_DIR, exist_ok=True)
+import os
+
+IMAGE_DIR = "menu_images"
 os.makedirs(IMAGE_DIR, exist_ok=True)
 
 # Custom CSS to match your HTML theme for edit company
@@ -1022,7 +1025,7 @@ elif selected == "Add Items":
                     with open(full_path, "wb") as f:
                         f.write(image.getbuffer())
 
-                    image_path = f"menu_images/{filename}"
+                image_path = os.path.join(IMAGE_DIR, filename)
 
                 variants_json = json.dumps(variant_data) if variant_data else None
                 base_price = min([v["price"] for v in variant_data]) if variant_data else 0
@@ -2131,6 +2134,7 @@ if st.session_state["page"] == "downloadbill":
 
 
     
+
 
 
 
