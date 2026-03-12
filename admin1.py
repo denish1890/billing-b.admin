@@ -1507,7 +1507,7 @@ elif selected == "Orders":
             st.divider()
             show_orders("CANCELLED", "cancelled")
 
-    elif selected == "Tables":
+elif selected == "Tables":
         st.title("🪑 Live Table Status")
         
         # 🟢 FIX: Added Missing Table Logic
@@ -1570,7 +1570,7 @@ elif selected == "Orders":
 
 
 
-    elif selected == "Edit Company":
+elif selected == "Edit Company":
         # --- 1. THEME HEADER ---
         # Using your gradient header style from the CSS
         st.markdown('<div class="header-style"><h1>✏️ Edit Company Details</h1></div>', unsafe_allow_html=True)
@@ -1680,7 +1680,7 @@ elif selected == "Orders":
             st.markdown('</div>', unsafe_allow_html=True)
     
 
-    elif selected == "Inventory / Sales":
+elif selected == "Inventory / Sales":
         st.title("📈 Analytics & Reports")
         col1, col2 = st.columns(2)
     
@@ -1889,7 +1889,7 @@ elif selected == "Orders":
                     plot_comparison(str(year1), total1, str(year2), total2)
 
 
-    elif selected == "Help & Support":
+elif selected == "Help & Support":
         # ==========================
         # 🎨 HELP PAGE SPECIFIC CSS & LAYOUT
         # ==========================
@@ -2132,6 +2132,7 @@ if st.session_state["page"] == "downloadbill":
 
 
     
+
 
 
 
