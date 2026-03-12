@@ -1298,7 +1298,7 @@ elif selected == "Manage Menu":
                 display_menu_items(cursor.fetchall(), "disabled")
 
 
-    elif selected == "Orders":
+elif selected == "Orders":
         st.title("🧾 Order Management")
         st_autorefresh(interval=5000, key="orders_autorefresh")  # Auto-refresh every 5s
         st.divider()
@@ -2132,6 +2132,7 @@ if st.session_state["page"] == "downloadbill":
 
 
     
+
 
 
 
