@@ -22,8 +22,6 @@ import base64
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 IMAGE_DIR = os.path.join(BASE_DIR, "menu_images")
 os.makedirs(IMAGE_DIR, exist_ok=True)
-bytes_data = uploaded_file.getvalue()
-base64_image = base64.b64encode(bytes_data).decode()
 
 
 # Custom CSS to match your HTML theme for edit company
@@ -1003,9 +1001,6 @@ elif selected == "Add Items":
         with col2:
             image = st.file_uploader("Upload Image", type=["png", "jpg", "jpeg"], key="add_item_image")
             available = st.checkbox("Available", value=True, key="add_item_available")
-            uploaded_file = st.file_uploader("Upload Image")
-
-        if uploaded_file is not None:
            
 
         if st.button("Add Item", key="add_item_btn"):
@@ -1034,11 +1029,21 @@ elif selected == "Add Items":
                 variants_json = json.dumps(variant_data) if variant_data else None
                 base_price = min([v["price"] for v in variant_data]) if variant_data else 0
 
-          cursor.execute("""
-               INSERT INTO menu_items (name, image, variants, available, email) 
-            VALUES (%s, %s, %s, %s, %s)
-          """, (item_name, base64_image, variants_json, 1, st.session_state["email"]))
-           db.commit()
+                cursor.execute("""
+                    INSERT INTO menu_items
+                    (name, price, image, available, is_active, email, variants)
+                    VALUES (%s, %s, %s, %s, %s, %s, %s)
+                """, (
+                    name,
+                    base_price,
+                    image_path,
+                    available,
+                    1,
+                    st.session_state["email"],
+                    variants_json
+                ))
+
+                db.commit()
 
                 st.success("✅ Item added successfully!")
                 st.rerun()
@@ -2128,7 +2133,6 @@ if st.session_state["page"] == "downloadbill":
 
 
     
-
 
 
 
