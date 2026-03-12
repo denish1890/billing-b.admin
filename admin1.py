@@ -1001,6 +1001,10 @@ elif selected == "Add Items":
         with col2:
             image = st.file_uploader("Upload Image", type=["png", "jpg", "jpeg"], key="add_item_image")
             available = st.checkbox("Available", value=True, key="add_item_available")
+            uploaded_file = st.file_uploader("Upload Image")
+
+        if uploaded_file is not None:
+           
 
         if st.button("Add Item", key="add_item_btn"):
             st.write("Item added")  # your DB code here
@@ -2132,6 +2136,7 @@ if st.session_state["page"] == "downloadbill":
 
 
     
+
 
 
 
