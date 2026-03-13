@@ -19,9 +19,13 @@ from streamlit_autorefresh import st_autorefresh
 from streamlit_option_menu import option_menu
 
 import base64
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-IMAGE_DIR = os.path.join(BASE_DIR, "menu_images")
-os.makedirs(IMAGE_DIR, exist_ok=True)
+import cloudinary
+import cloudinary.uploader
+
+cloudinary.config(
+    cloud_name="dfnd7rqbg",
+    api_key="635954955762459",
+    api_secret="EcCKClRGodV5S1oeEk5LBvANA-k"
 
 
 # Custom CSS to match your HTML theme for edit company
@@ -1014,21 +1018,19 @@ elif selected == "Add Items":
             elif type_count > 0 and any(v["price"] <= 0 for v in variant_data):
                 st.error("Variant price must be greater than 0")
 
-            else:
-                image_path = None
+           else:
+                image_url = None  # Change 1: We use URL now, not local path
 
                 if image is not None:
-                    filename = f"{uuid.uuid4()}_{image.name}"
-                    full_path = os.path.join(IMAGE_DIR, filename)
-
-                    with open(full_path, "wb") as f:
-                        f.write(image.getbuffer())
-
-                image_path = os.path.join(IMAGE_DIR, filename)
+                    # Change 2: Upload directly to Cloudinary
+                    with st.spinner("Uploading image to Cloud..."):
+                        upload_result = cloudinary.uploader.upload(image)
+                        image_url = upload_result["secure_url"] # This is the web link
 
                 variants_json = json.dumps(variant_data) if variant_data else None
                 base_price = min([v["price"] for v in variant_data]) if variant_data else 0
 
+                # Change 3: Save the image_url to the database
                 cursor.execute("""
                     INSERT INTO menu_items
                     (name, price, image, available, is_active, email, variants)
@@ -1036,7 +1038,7 @@ elif selected == "Add Items":
                 """, (
                     name,
                     base_price,
-                    image_path,
+                    image_url,  # This now saves "https://res.cloudinary.com/..."
                     available,
                     1,
                     st.session_state["email"],
@@ -1044,8 +1046,7 @@ elif selected == "Add Items":
                 ))
 
                 db.commit()
-
-                st.success("✅ Item added successfully!")
+                st.success("✅ Item added with Cloud Image!")
                 st.rerun()
 
                 st.markdown('</div>', unsafe_allow_html=True)
