@@ -19,14 +19,9 @@ from streamlit_autorefresh import st_autorefresh
 from streamlit_option_menu import option_menu
 
 import base64
-import cloudinary
-import cloudinary.uploader
-
-cloudinary.config(
-    cloud_name="dfnd7rqbg",
-    api_key="635954955762459",
-    api_secret="EcCKClRGodV5S1oeEk5LBvANA-k"
-)
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+IMAGE_DIR = os.path.join(BASE_DIR, "menu_images")
+os.makedirs(IMAGE_DIR, exist_ok=True)
 
 
 # Custom CSS to match your HTML theme for edit company
@@ -342,7 +337,7 @@ if not st.session_state.company_loaded and st.session_state.get("email"):
         st.session_state.company_address = row.get("company_address", "")
         st.session_state.gst_number = row.get("gst_number", "")
         st.session_state.company_phone = row.get("mobile", "")
-        st.session_state.upi_qr_image = row.get("upi_qr_image", "")
+        st.session_state.upi_qr_= row.get("upi_qr_image", "")
         st.session_state.upi_id = row.get("upi_id", "")
         st.session_state.total_tables = row.get("total_tables", 0)
         st.session_state.online_payment_enabled = bool(
@@ -1020,11 +1015,16 @@ elif selected == "Add Items":
                 st.error("Variant price must be greater than 0")
 
             else:
-                image_url = None
+                image_path = None
 
-            if image is not None:
-               result = cloudinary.uploader.upload(image)
-                 image_url = result["secure_url"]
+                if image is not None:
+                    filename = f"{uuid.uuid4()}_{image.name}"
+                    full_path = os.path.join(IMAGE_DIR, filename)
+
+                    with open(full_path, "wb") as f:
+                        f.write(image.getbuffer())
+
+                image_path = os.path.join(IMAGE_DIR, filename)
 
                 variants_json = json.dumps(variant_data) if variant_data else None
                 base_price = min([v["price"] for v in variant_data]) if variant_data else 0
