@@ -1020,10 +1020,10 @@ if st.session_state["page"] == "Admin":
                       upload_result = cloudinary.uploader.upload(image)
                       image_url = upload_result["secure_url"]
             
-                    variants_json = json.dumps(variant_data) if variant_data else None
-                    base_price = min([v["price"] for v in variant_data]) if variant_data else 0
+                variants_json = json.dumps(variant_data) if variant_data else None
+                base_price = min([v["price"] for v in variant_data]) if variant_data else 0
             
-                    cursor.execute("""
+                cursor.execute("""
                         INSERT INTO menu_items 
                         (name, price, image, available, is_active, email, variants) 
                         VALUES (%s, %s, %s, %s, %s, %s, %s)
@@ -1031,9 +1031,9 @@ if st.session_state["page"] == "Admin":
                         name, base_price, image_url, available, 1, 
                         st.session_state["email"], variants_json
                     ))
-                    db.commit()
-                    st.success("✅ Item added successfully!")
-                    st.rerun()
+                db.commit()
+                st.success("✅ Item added successfully!")
+                st.rerun()
     
                 st.markdown('</div>', unsafe_allow_html=True)
 
