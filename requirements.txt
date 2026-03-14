@@ -8,5 +8,4 @@ pandas
 matplotlib
 streamlit-autorefresh
 streamlit-option-menu
-cloudinary
 
