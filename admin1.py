@@ -1028,14 +1028,14 @@ if st.session_state["page"] == "Admin":
                         (name, price, image, available, is_active, email, variants) 
                         VALUES (%s, %s, %s, %s, %s, %s, %s)
                     """, (
-                        name, base_price, image_path, available, 1, 
+                        name, base_price, image_url, available, 1, 
                         st.session_state["email"], variants_json
                     ))
                     db.commit()
                     st.success("✅ Item added successfully!")
                     st.rerun()
     
-            st.markdown('</div>', unsafe_allow_html=True)
+                st.markdown('</div>', unsafe_allow_html=True)
 
  
     elif selected == "Manage Menu":
