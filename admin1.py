@@ -18,6 +18,14 @@ from streamlit_autorefresh import st_autorefresh
 from streamlit_option_menu import option_menu
 
 import base64
+import cloudinary
+import cloudinary.uploader
+
+cloudinary.config(
+    cloud_name="dfnd7rqbg",
+    api_key="635954955762459",
+    api_secret="EcCKClRGodV5S1oeEk5LBvANA-k"
+)
 
 # Custom CSS to match your HTML theme for edit company
 st.markdown("""
@@ -972,7 +980,9 @@ if st.session_state["page"] == "Admin":
             
             with col1:
                 name = st.text_input("Item Name", key="add_item_name")
-                type_count = st.number_input("How many variants?", min_value=0, max_value=10, step=1, key="add_variant_count")
+                type_count = st.number_input(
+                     "How many variants?", min_value=0, max_value=10, step=1, key="add_variant_count"
+                )
                 variant_data = []
         
                 if type_count > 0:
@@ -983,12 +993,13 @@ if st.session_state["page"] == "Admin":
                             v_name = st.text_input(f"Variant {i+1} Name", key=f"vname_{i}")
                         with v_col2:
                             v_price = st.number_input(f"Price for {i+1}", min_value=0, key=f"vprice_{i}")
-                        variant_data.append({"name": v_name, "price": v_price})
+                            variant_data.append({"name": v_name, "price": v_price})
     
             with col2:
-                image = st.file_uploader("Upload Image", type=["png", "jpg", "jpeg"], key="add_item_image")
-                available = st.checkbox("Available", value=True, key="add_item_available")
-    
+               image = st.file_uploader("Upload Image", type=["png", "jpg", "jpeg"], key="add_item_image")
+               available = st.checkbox("Available", value=True, key="add_item_available")
+
+               
             if st.button("Add Item", key="add_item_btn"):
                 # --- VALIDATION LOGIC START ---
                 if not name.strip():
@@ -1003,12 +1014,11 @@ if st.session_state["page"] == "Admin":
                 
                 else:
                     # Proceed with saving if validation passes
-                    image_path = None
-                    if image:
-                        os.makedirs("menu_images", exist_ok=True)
-                        image_path = os.path.join("menu_images", image.name)
-                        with open(image_path, "wb") as f:
-                            f.write(image.getbuffer())
+                   image_url = None
+
+                   if image is not None:
+                      upload_result = cloudinary.uploader.upload(image)
+                      image_url = upload_result["secure_url"]
             
                     variants_json = json.dumps(variant_data) if variant_data else None
                     base_price = min([v["price"] for v in variant_data]) if variant_data else 0
@@ -1202,12 +1212,8 @@ if st.session_state["page"] == "Admin":
                         with col_save:
                             if st.button("✅ Save Item", key=f"save_{tab_name}_{item['id']}"):
                                 if new_image_file is not None:
-                                    # Create a directory if it doesn't exist
-                                    os.makedirs("menu_images", exist_ok=True)
-                                    # Define new path (using timestamp or item ID to avoid name collisions)
-                                    final_image_path = os.path.join("menu_images", f"{item['id']}_{new_image_file.name}")
-                                    with open(final_image_path, "wb") as f:
-                                        f.write(new_image_file.getbuffer())
+                                   upload_result = cloudinary.uploader.upload(new_image_file)
+                                   st.session_state.edit_image = upload_result["secure_url"]
                                 variants_json = json.dumps(variants) if variants else None
                                 active_prices = [v["price"] for v in variants if v.get("available", True)]
                                 base_price = min([v["price"] for v in variants]) if variants else new_price
@@ -1371,12 +1377,12 @@ if st.session_state["page"] == "Admin":
                         col_img, col_text = st.columns([1, 4])
                         with col_img:
                             try:
-                                if i["image"] and os.path.exists(i["image"]):
-                                    st.image(Image.open(i["image"]), width=70)
+                                if i["image"]:
+                                   st.image(i["image"], width=70)
                                 else:
-                                    st.write("No image")
-                            except:
                                 st.write("No image")
+                           except:
+                               st.write("No image")
                         with col_text:
                             st.markdown(
                                 f"**{i['name']} ({variant})**  \n"
