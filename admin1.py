@@ -1381,8 +1381,8 @@ if st.session_state["page"] == "Admin":
                                    st.image(i["image"], width=70)
                                 else:
                                     st.write("No image")
-                           except:
-                               st.write("No image")
+                            except:
+                                 st.write("No image")
                         with col_text:
                             st.markdown(
                                 f"**{i['name']} ({variant})**  \n"
