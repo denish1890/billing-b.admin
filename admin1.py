@@ -1380,7 +1380,7 @@ if st.session_state["page"] == "Admin":
                                 if i["image"]:
                                    st.image(i["image"], width=70)
                                 else:
-                                st.write("No image")
+                                    st.write("No image")
                            except:
                                st.write("No image")
                         with col_text:
